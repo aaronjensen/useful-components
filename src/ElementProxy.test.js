@@ -163,3 +163,30 @@ describe("Parent class component", () => {
     expect(text).toBeInTheDocument()
   })
 })
+
+describe("Grandparent class component", () => {
+  class GrandParent extends React.Component {
+    render() {
+      return <Parent />
+    }
+  }
+
+  class Parent extends React.Component {
+    render() {
+      return <ChildWithSub>1</ChildWithSub>
+    }
+  }
+
+  test("not subbing", () => {
+    console.log(<GrandParent />)
+    const { getByText } = render(<GrandParent />)
+    const text = getByText(/real child: 1/i)
+    expect(text).toBeInTheDocument()
+  })
+
+  test("subbing", () => {
+    const { getByText } = renderWithSubs(<GrandParent />)
+    const text = getByText(/sub child: 1/i)
+    expect(text).toBeInTheDocument()
+  })
+})
